@@ -206,6 +206,10 @@ void setup() {
   printRegister(1, 0, true, false, false);
   printRegister(2, 23111, true, false, false);
   printRegister(3, -222, true, false, false);
+  lightVerblamp(green);
+  printVerb(verb, false);
+  printNoun(noun, false);
+  printProg(prog, false);
 }
 
 void loop() {
@@ -257,7 +261,6 @@ void loop() {
           // only new valid key in idle mode would be the VERB key
           if (current_key == keyVerb)
           {
-            setLamp(yellow, lampTracker);
             mode = modeInputVerb;
             break;
           }
@@ -278,6 +281,7 @@ void loop() {
           break;
         case modeInputVerb:
           lightVerblamp(blue);
+          printVerb(verb,false);
           countregister();
           break;
         default:

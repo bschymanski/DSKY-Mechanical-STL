@@ -155,17 +155,59 @@ void printRegister(int dregister, long number, bool leadzero = true, bool blink 
 
 void printProg(int prog, bool blink = false)
 {
-
+  int one = 0;
+  int ten = 0;
+  if (prog == programNone)
+  {
+    Serial1.print("P1");
+    Serial1.print(".txt=\" \"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+    Serial1.print("P2");
+    Serial1.print(".txt=\" \"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+  }
 }
 
 void printVerb(int verb, bool blink = false)
 {
-
+  int one = 0;
+  int ten = 0;
+  if (verb == verbNone)
+  {
+    Serial1.print("V1");
+    Serial1.print(".txt=\" \"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+    Serial1.print("V2");
+    Serial1.print(".txt=\" \"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+  }
 }
 
 void printNoun(int noun, bool blink = false)
 {
-
+  int one = 0;
+  int ten = 0;
+  if (noun == nounNone)
+  {
+    Serial1.print("N1");
+    Serial1.print(".txt=\" \"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+    Serial1.print("N2");
+    Serial1.print(".txt=\" \"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+  }
 }
 
 void lightVerblamp(int color)
