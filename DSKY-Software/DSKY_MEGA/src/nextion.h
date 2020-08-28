@@ -11,5 +11,5 @@ extern void printChar(int dregister, int digit, char character,  bool blink = fa
 extern void clearRegister(int dregister);
 extern void nextion_debug_page(void);
 extern void nextion_main_page(void);
-
+extern void lightVerblamp(int color);
 #endif

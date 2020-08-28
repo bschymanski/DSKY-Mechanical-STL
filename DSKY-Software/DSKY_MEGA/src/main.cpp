@@ -126,6 +126,40 @@ long loopincrement_r1 = 0;
 long loopincrement_r2 = 0;
 long loopincrement_r3 = 0;
 
+void countregister()  // simple Idlefunction that counts on the registers
+{
+    if (loopincrement_r1 < 100000 && loopincrement_r2 < 100000 && loopincrement_r3 < 100000)
+    {
+      loopincrement_r1++;
+      printRegister(1, loopincrement_r1, true, false, false);
+      printRegister(2, loopincrement_r2, true, false, false);
+      printRegister(3, loopincrement_r3, true, false, false);
+    }
+    else if (loopincrement_r1 >= 100000 && loopincrement_r2 < 100000 && loopincrement_r3 < 100000)
+    {
+      loopincrement_r1 = 0;
+      loopincrement_r2++;
+      printRegister(1, loopincrement_r1, true, false, false);
+      printRegister(2, loopincrement_r2, true, false, false);
+      printRegister(3, loopincrement_r3, true, false, false);
+    }
+    else if (loopincrement_r1 < 100000 && loopincrement_r2 >= 100000 && loopincrement_r3 < 100000)
+    {
+      loopincrement_r2 = 0;
+      loopincrement_r3++;
+      printRegister(1, loopincrement_r1, true, false, false);
+      printRegister(2, loopincrement_r2, true, false, false);
+      printRegister(3, loopincrement_r3, true, false, false);
+    }
+    else if (loopincrement_r1 < 100000 && loopincrement_r2 < 100000 && loopincrement_r3 >= 100000)
+    {
+      loopincrement_r3 = 0;
+      printRegister(1, loopincrement_r1, true, false, false);
+      printRegister(2, loopincrement_r2, true, false, false);
+      printRegister(3, loopincrement_r3, true, false, false);
+    }
+}
+
 void setup() {
   configureCommon(); // Setup pins for interrupt
   attachInterrupt(digitalPinToInterrupt(commonPin), pressInterrupt, FALLING);
@@ -199,220 +233,59 @@ void loop() {
   }
   else if (gotInterrupt == false) // Main Program starts here
   {
-    if (millis() - mainLoopDelay < 100) { // Debounce
+    if (millis() - mainLoopDelay < 100) {
       return;
       
     }
-    //configureCommon();
-    //sei ();
     mainLoopDelay = millis();
     setLamp(off, lampTemp);
     setLamp(off, lampUplinkActy);
     setLamp(off, lampNoAtt);
     setLamp(off, lampSTBY);
     setLamp(off, lampKeyRelease);
-    //Serial.print("gotInterrupt ");
-    //Serial.println(gotInterrupt);
-    //Serial.println("Loop");
-    //Serial.print("old_key     : ");
-    //Serial.println(old_key);
-    //Serial.print("current_key : ");
-    //Serial.println(current_key);
-    if (current_key != 0)
-    {
-      setLamp(blue, lampAlt);
-    }
+    setLamp(off, lampGimbalLock);
+    setLamp(off, lampVel);
     if (current_key != old_key) // a new key has been pressed, save
     {
       old_key = current_key;
-      //Serial.print("A new Key has been pressed! : ");
       setLamp(yellow, lampUplinkActy);
       setLamp(red, lampGimbalLock);
-
-      //Serial.println(current_key);
       setLamp(yellow, lampVel);
-      switch (current_key) {
-        case 1:
-          current_key = keyNoun;
-          setLamp(red, lampVel);
-          //Serial.print("NOUN ");
-          //Serial.println(current_key);
-          break;
-        case 2:
-          current_key = keyProceed;
-          setLamp(red, lampVel);
-          //Serial.print("PRO ");
-          //Serial.println(current_key);
-          break;
-        case 3:
-          current_key = keyEnter;
-          setLamp(red, lampVel);
-          //Serial.print("ENTR ");
-          //Serial.println(current_key);
-          break;
-        case 4:
-          current_key = keyReset;
-          setLamp(red, lampVel);
-          //Serial.print("RSET ");
-          //Serial.println(current_key);
-          break;
-        case 5:
-          current_key = keyRelease;
-          setLamp(red, lampVel);
-          //Serial.print("KEY REL ");
-          //Serial.println(current_key);
-          break;
-        case 6:
-          current_key = keyClear;
-          setLamp(red, lampVel);
-          //Serial.print("CLR ");
-          //Serial.println(current_key);
-          break;
-        case 7:
-          current_key = keyPlus;
-          setLamp(red, lampVel);
-          //Serial.print("+ ");
-          //Serial.println(current_key);
-          break;
-        case 8:
-          current_key = keyMinus;
-          setLamp(red, lampVel);
-          //Serial.print("- ");
-          //Serial.println(current_key);
-          break;
-        case 9:
-          current_key = keyNumber0;
-          setLamp(red, lampVel);
-          //Serial.print("0 ");
-          //Serial.println(current_key);
-          break;
-        case 10:
-          current_key = keyNumber1;
-          setLamp(red, lampVel);
-          //Serial.print("1 ");
-          //Serial.println(current_key);
-          break;
-        case 11:
-          current_key = keyNumber2;
-          setLamp(red, lampVel);
-          //Serial.print("2 ");
-          //Serial.println(current_key);
-          break;
-        case 12:
-          current_key = keyNumber3;
-          setLamp(red, lampVel);
-          //Serial.print("3 ");
-          //Serial.println(current_key);
-          break;    
-        case 13:
-          current_key = keyNumber4;
-          setLamp(red, lampVel);
-          //Serial.print("4 ");
-          //Serial.println(current_key);
-          break;
-        case 14:
-          current_key = keyNumber5;
-          setLamp(red, lampVel);
-          //Serial.print("5 ");
-          //Serial.println(current_key);
-          break;
-        case 15:
-          current_key = keyNumber6;
-          setLamp(red, lampVel);
-          //Serial.print("6 ");
-          //Serial.println(current_key);
-          break;
-        case 16:
-          current_key = keyNumber7;
-          setLamp(red, lampVel);
-          //Serial.print("7 ");
-          //Serial.println(current_key);
-          break;
-        case 17:
-          current_key = keyNumber8;
-          setLamp(red, lampVel);
-          //Serial.print("8 ");
-          //Serial.println(current_key);
-          break;
-        case 18:
-          current_key = keyNumber9;
-          setLamp(red, lampVel);
-          //Serial.print("9 ");
-          //Serial.println(current_key);
-          break;
-        case 19:
-          current_key = keyVerb;
-          setLamp(red, lampVel);
-          //Serial.print("VERB ");
-          //Serial.println(current_key);
+      switch (mode)
+      {
+        case modeIdle:  // IdleMode, DSKY waits for input
+          // only new valid key in idle mode would be the VERB key
+          if (current_key == keyVerb)
+          {
+            setLamp(yellow, lampTracker);
+            mode = modeInputVerb;
+            break;
+          }
+          // switch current_key
           break;
         default:
-          current_key = keyNone;
-          setLamp(red, lampVel);
-          //Serial.print("NONE ");
-          //Serial.println(current_key);
-          break; // Wird nicht benötigt, wenn Statement(s) vorhanden sind
+          break;
       }
-      if (current_key == old_key)
+      // end switch mode()
+    }
+    // end a new key has been pressed, save
+    else if (current_key == old_key)
+    {
+      switch (mode)
       {
-        setLamp(off, lampVel);
-        setLamp(green, lampGimbalLock);
-        //detachInterrupt(digitalPinToInterrupt(commonPin));
-        //configureCommon();
-        //sei ();
-        //attachInterrupt(digitalPinToInterrupt(commonPin), pressInterrupt, FALLING);
-        //configureCommon();
-        //sei ();
-        //attachInterrupt(digitalPinToInterrupt(commonPin), pressInterrupt, FALLING);
-        //detachInterrupt(digitalPinToInterrupt(commonPin));
-        //configureCommon();
-        //sei ();
-        //attachInterrupt(digitalPinToInterrupt(commonPin), pressInterrupt, FALLING);
-        //sei ();
+        case modeIdle:  // IdleMode, DSKY waits for input
+          countregister();
+          break;
+        case modeInputVerb:
+          lightVerblamp(blue);
+          countregister();
+          break;
+        default:
+          break;
       }
-      if (mainLoopISRDelay > 10000) { // Debounce
-        setLamp(yellow, lampVel);
-        //Serial.print("Interrupt neu attachet nach 10000 Sekunden");
-        //configureCommon();
-        //sei ();
-        //attachInterrupt(digitalPinToInterrupt(commonPin), pressInterrupt, FALLING);
+    }
 
-        return;
-        }
-      
-    }
-    if (loopincrement_r1 < 100000 && loopincrement_r2 < 100000 && loopincrement_r3 < 100000)
-    {
-      loopincrement_r1++;
-      printRegister(1, loopincrement_r1, true, false, false);
-      printRegister(2, loopincrement_r2, true, false, false);
-      printRegister(3, loopincrement_r3, true, false, false);
-    }
-    else if (loopincrement_r1 >= 100000 && loopincrement_r2 < 100000 && loopincrement_r3 < 100000)
-    {
-      loopincrement_r1 = 0;
-      loopincrement_r2++;
-      printRegister(1, loopincrement_r1, true, false, false);
-      printRegister(2, loopincrement_r2, true, false, false);
-      printRegister(3, loopincrement_r3, true, false, false);
-    }
-    else if (loopincrement_r1 < 100000 && loopincrement_r2 >= 100000 && loopincrement_r3 < 100000)
-    {
-      loopincrement_r2 = 0;
-      loopincrement_r3++;
-      printRegister(1, loopincrement_r1, true, false, false);
-      printRegister(2, loopincrement_r2, true, false, false);
-      printRegister(3, loopincrement_r3, true, false, false);
-    }
-    else if (loopincrement_r1 < 100000 && loopincrement_r2 < 100000 && loopincrement_r3 >= 100000)
-    {
-      loopincrement_r3 = 0;
-      printRegister(1, loopincrement_r1, true, false, false);
-      printRegister(2, loopincrement_r2, true, false, false);
-      printRegister(3, loopincrement_r3, true, false, false);
-    }
     
-    //nextion_debug_page();
 
   }  // END Main Program starts here
   //delay(00);

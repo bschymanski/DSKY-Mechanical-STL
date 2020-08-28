@@ -1,6 +1,7 @@
 #include <nextion.h>
 #include <Arduino.h>
 #include <main.h>
+#include <neopixel.h>
 
 String fieldname = " ";
 
@@ -165,6 +166,35 @@ void printVerb(int verb, bool blink = false)
 void printNoun(int noun, bool blink = false)
 {
 
+}
+
+void lightVerblamp(int color)
+{
+  switch (color)
+  {
+    case blue:
+      Serial1.print("verblight.pco=BLUE");
+      Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+      Serial1.write(0xff);
+      Serial1.write(0xff);
+      break;
+    case green:
+      Serial1.print("verblight.pco=GREEN");
+      Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+      Serial1.write(0xff);
+      Serial1.write(0xff);
+      break;
+    case yellow:
+      Serial1.print("verblight.pco=YELLOW");
+      Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+      Serial1.write(0xff);
+      Serial1.write(0xff);
+      break;
+    default:
+      break;
+  }
+  
+  
 }
 
 void printREG(int dregister, int digit, char character,  bool blink = false, bool alarm = false)
