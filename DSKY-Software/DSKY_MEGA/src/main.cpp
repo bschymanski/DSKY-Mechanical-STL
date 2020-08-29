@@ -160,6 +160,8 @@ void countregister()  // simple Idlefunction that counts on the registers
     }
 }
 
+#define DEBUG 1
+
 void setup() {
   configureCommon(); // Setup pins for interrupt
   attachInterrupt(digitalPinToInterrupt(commonPin), pressInterrupt, FALLING);
@@ -202,11 +204,21 @@ void setup() {
   Serial1.write(0xff);
   Serial1.end();
   Serial1.begin(115200);
+  #ifdef DEBUG
+    Serial2.begin(9600);
+    Serial2.print("baud=115200");
+    Serial2.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial2.write(0xff);
+    Serial2.write(0xff);
+    Serial2.end();
+    Serial2.begin(115200);
+  #endif
   nextion_main_page();
   printRegister(1, 0, true, false, false);
   printRegister(2, 23111, true, false, false);
   printRegister(3, -222, true, false, false);
   lightVerblamp(green);
+  lightCompActy(off);
   printVerb(verb, false);
   printNoun(noun, false);
   printProg(prog, false);
@@ -237,11 +249,13 @@ void loop() {
   }
   else if (gotInterrupt == false) // Main Program starts here
   {
-    if (millis() - mainLoopDelay < 100) {
+    if (millis() - mainLoopDelay < 50)  // Little Mainloop Delay
+    {
       return;
-      
     }
     mainLoopDelay = millis();
+    // End Little Mainloop Delay
+
     setLamp(off, lampTemp);
     setLamp(off, lampUplinkActy);
     setLamp(off, lampNoAtt);
@@ -251,11 +265,10 @@ void loop() {
     setLamp(off, lampVel);
     if (current_key != old_key) // a new key has been pressed, save
     {
-      old_key = current_key;
       setLamp(yellow, lampUplinkActy);
       setLamp(red, lampGimbalLock);
       setLamp(yellow, lampVel);
-      switch (mode)
+      switch (mode)  // Switch Modes
       {
         case modeIdle:  // IdleMode, DSKY waits for input
           // only new valid key in idle mode would be the VERB key
@@ -270,6 +283,7 @@ void loop() {
           break;
       }
       // end switch mode()
+      old_key = current_key;
     }
     // end a new key has been pressed, save
     else if (current_key == old_key)
@@ -280,8 +294,8 @@ void loop() {
           countregister();
           break;
         case modeInputVerb:
-          lightVerblamp(blue);
-          printVerb(verb,false);
+          //lightVerblamp(blue);
+          //printVerb(verb,false);
           countregister();
           break;
         default:
@@ -293,5 +307,11 @@ void loop() {
 
   }  // END Main Program starts here
   //delay(00);
+  printVerb(verb, false);
+  printNoun(noun, false);
+  printProg(prog, false);
+  #ifdef DEBUG
+  nextion_debug();
+  #endif
 }
 

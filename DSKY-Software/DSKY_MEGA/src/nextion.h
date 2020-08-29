@@ -12,4 +12,6 @@ extern void clearRegister(int dregister);
 extern void nextion_debug_page(void);
 extern void nextion_main_page(void);
 extern void lightVerblamp(int color);
+extern void lightCompActy(int color);
+extern void nextion_debug(void);
 #endif
