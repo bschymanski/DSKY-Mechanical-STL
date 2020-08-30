@@ -189,8 +189,6 @@ void printProg(int prog, bool blink = false)
 
 void printVerb(int verb, bool blink = false)
 {
-  int one = 0;
-  int ten = 0;
   if (verb == verbNone)
   {
     Serial1.print("V1");
@@ -207,23 +205,45 @@ void printVerb(int verb, bool blink = false)
 }
 void printVerb0(int verb_0, bool blink = false)
 {
-  Serial1.print("V1");
-  Serial1.print(".txt=\"");
-  Serial1.print(verb_0);
-  Serial1.print("\"");
-  Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
-  Serial1.write(0xff);
-  Serial1.write(0xff);
+  if (verb_0 >= 0)
+  {
+    Serial1.print("V1");
+    Serial1.print(".txt=\"");
+    Serial1.print(verb_0);
+    Serial1.print("\"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+  }
+  else if (verb_0 < 0)
+  {
+    Serial1.print("V1");
+    Serial1.print(".txt=\" \"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+  }
 }
 void printVerb1(int verb_1, bool blink = false)
 {
-  Serial1.print("V2");
-  Serial1.print(".txt=\"");
-  Serial1.print(verb_1);
-  Serial1.print("\"");
-  Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
-  Serial1.write(0xff);
-  Serial1.write(0xff);
+  if (verb_1 >= 0)
+  {
+    Serial1.print("V2");
+    Serial1.print(".txt=\"");
+    Serial1.print(verb_1);
+    Serial1.print("\"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+  }
+  else if (verb_1 < 0)
+  {
+    Serial1.print("V2");
+    Serial1.print(".txt=\" \"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+  }
 }
 
 
