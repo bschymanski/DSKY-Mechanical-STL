@@ -4,6 +4,7 @@
 #include <wire.h>
 #include <neopixel.h>
 #include <nextion.h>
+#include <inputverb.h>
 
 
 ProgramStruct ProgramTable[] =
@@ -32,6 +33,7 @@ ProgramStruct ProgramTable[] =
 };
 
 volatile int current_key = 0;
+volatile int current_key_int = 0;
 volatile bool gotInterrupt = false;
 int old_key = 0;
 unsigned long int mainLoopDelay = 0;
@@ -228,32 +230,16 @@ void loop() {
   // Empty!
   if (gotInterrupt == true)
   {
-    //readkeys();
-    setLamp(green, lampTemp);
-    //Serial.print("gotInterrupt ");
-    //Serial.println(gotInterrupt);
-    //Serial.println("key pressed");
-    //delay(100);
-    //configureCommon();
-    //sei ();
-    //attachInterrupt(digitalPinToInterrupt(commonPin), pressInterrupt, FALLING);
-    //delay(100);
-    //detachInterrupt(digitalPinToInterrupt(commonPin));
-    //configureCommon();
-    //sei ();
-    //attachInterrupt(digitalPinToInterrupt(commonPin), pressInterrupt, FALLING);
-    //sei ();
+    //setLamp(green, lampTemp);
     gotInterrupt = false;
-    //Serial.print("gotInterrupt ");
-    //Serial.println(gotInterrupt);
   }
   else if (gotInterrupt == false) // Main Program starts here
   {
-    if (millis() - mainLoopDelay < 50)  // Little Mainloop Delay
-    {
-      return;
-    }
-    mainLoopDelay = millis();
+    //if (millis() - mainLoopDelay < 50)  // Little Mainloop Delay
+    //{
+    //  return;
+    //}
+    //mainLoopDelay = millis();
     // End Little Mainloop Delay
 
     setLamp(off, lampTemp);
@@ -265,9 +251,9 @@ void loop() {
     setLamp(off, lampVel);
     if (current_key != old_key) // a new key has been pressed, save
     {
-      setLamp(yellow, lampUplinkActy);
-      setLamp(red, lampGimbalLock);
-      setLamp(yellow, lampVel);
+      setLamp(off, lampPosition);
+      setLamp(off, lampPosition);
+      setLamp(off, lampPosition);
       switch (mode)  // Switch Modes
       {
         case modeIdle:  // IdleMode, DSKY waits for input
@@ -275,9 +261,13 @@ void loop() {
           if (current_key == keyVerb)
           {
             mode = modeInputVerb;
+            inputVerb();
             break;
           }
           // switch current_key
+          break;
+        case modeInputVerb:
+          inputVerb();
           break;
         default:
           break;
@@ -307,9 +297,6 @@ void loop() {
 
   }  // END Main Program starts here
   //delay(00);
-  printVerb(verb, false);
-  printNoun(noun, false);
-  printProg(prog, false);
   #ifdef DEBUG
   nextion_debug();
   #endif

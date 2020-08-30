@@ -2,6 +2,7 @@
 #define MAIN_H
 
 volatile extern int current_key;
+volatile extern int current_key_int;
 volatile extern bool gotInterrupt;
 extern int old_key;
 

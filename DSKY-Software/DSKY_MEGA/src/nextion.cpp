@@ -20,7 +20,7 @@ void nextion_enter(int serialport)
   }
 }
 
-void nextion_print_REG(int dregister, int place, int number)
+void nextion_print_REG(int dregister, int place, int number)  // not in use, use printRegister()
 {
     Serial1.print("R");
     Serial1.print(dregister);
@@ -205,6 +205,27 @@ void printVerb(int verb, bool blink = false)
     Serial1.write(0xff);
   }
 }
+void printVerb0(int verb_0, bool blink = false)
+{
+  Serial1.print("V1");
+  Serial1.print(".txt=\"");
+  Serial1.print(verb_0);
+  Serial1.print("\"");
+  Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+  Serial1.write(0xff);
+  Serial1.write(0xff);
+}
+void printVerb1(int verb_1, bool blink = false)
+{
+  Serial1.print("V2");
+  Serial1.print(".txt=\"");
+  Serial1.print(verb_1);
+  Serial1.print("\"");
+  Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+  Serial1.write(0xff);
+  Serial1.write(0xff);
+}
+
 
 void printNoun(int noun, bool blink = false)
 {
@@ -243,6 +264,18 @@ void lightVerblamp(int color)
       break;
     case yellow:
       Serial1.print("verblight.pco=YELLOW");
+      Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+      Serial1.write(0xff);
+      Serial1.write(0xff);
+      break;
+    case red:
+      Serial1.print("verblight.pco=RED");
+      Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+      Serial1.write(0xff);
+      Serial1.write(0xff);
+      break;
+    case off:
+      Serial1.print("verblight.pco=BLACK");
       Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
       Serial1.write(0xff);
       Serial1.write(0xff);
