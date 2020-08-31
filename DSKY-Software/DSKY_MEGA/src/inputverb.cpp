@@ -29,42 +29,34 @@ void clearVerbfunction()
 void inputVerb()
 {
   int temporaryKey = current_key;
-  if ((verb_0 >= 0) && (verb_1 >= 0) && (verb_valid != true) && (verb_error !=true)) // we might possibly have a valid verb! Lets check it out
+  if ((verb_0 >= 0) && (verb_1 >= 0) && (verb_valid != true) && (verb_error !=true) && (temporaryKey == keyClear)) //we want to change the last digit, pressed keyclear
+  {
+    if ((verb_0 >= 0) && (verb_1 <= 0) && (verb_valid != true) && (verb_error !=true))
+    {
+      verb_0 = -1;
+      printVerb0(verb_0, false);
+    }
+    else if ((verb_0 >= 0) && (verb_1 >= 0) && (verb_valid != true) && (verb_error !=true))
+    {
+      verb_1 = -1;
+      printVerb1(verb_1, false);
+    }
+  }
+  else if ((verb_0 >= 0) && (verb_1 >= 0) && (verb_valid != true) && (verb_error !=true) && (temporaryKey == keyRelease)) // we entered both verb_0 and ver_1, but want to cancel anyway, pressed keyRelease
+  {
+    verb_0 = -1;
+    verb_1 = -1;
+    printVerb0(verb_0, false);
+    printVerb1(verb_1, false);
+    verb_error = false;
+    verb_valid = false;
+    verb = 0;
+    mode = modeIdle;
+    lightVerblamp(green);
+  }
+  else if ((verb_0 >= 0) && (verb_1 >= 0) && (verb_valid != true) && (verb_error !=true) ) // we might possibly have a valid verb! Lets check it out
   {
     lightVerblamp(blue);
-    switch(temporaryKey)
-    {
-      case keyRelease:  // we changed our mind and don't want to input a verb, back to idle mode
-        if ((verb_0 <= 0) && (verb_1 <= 0) && (verb_valid != true) && (verb_error !=true))
-        {
-          mode = modeIdle;
-          verb_0 = -1;
-          verb_1 = -1;
-          printVerb(verb, false);
-          lightVerblamp(green);
-        }
-        else if ((verb_valid != true) && (verb_error !=true))
-        {
-          mode = modeIdle;
-          verb_0 = -1;
-          verb_1 = -1;
-          printVerb(verb, false);
-          lightVerblamp(green);
-        }
-        break;
-      case keyClear:
-        if ((verb_0 >= 0) && (verb_1 <= 0) && (verb_valid != true) && (verb_error !=true))
-        {
-          verb_0 = -1;
-          printVerb0(verb_0, false);
-        }
-        else if ((verb_0 >= 0) && (verb_1 >= 0) && (verb_valid != true) && (verb_error !=true))
-        {
-          verb_1 = -1;
-          printVerb1(verb_1, false);
-        }
-        break;
-    }
     verb_temp = (verb_0*10)+verb_1;
     short idx = 0;
     bool found = false;
@@ -96,8 +88,8 @@ void inputVerb()
         }
         if (verb_valid == false)
         { // we don't have a valid verb, sorry. Turn on the error lamp and clear verb_0 - noun_1 variables
-            setLamp(white, lampOprErr);
-            verb_error = true;
+          setLamp(white, lampOprErr);
+          verb_error = true;
         }
   }
   else if ((verb_valid != true) && (verb_error !=true)) // we do not have a valid verb yet
@@ -182,6 +174,7 @@ void inputVerb()
         printVerb1(verb_1, false);
         setLamp(off, lampOprErr);
         verb_error = false;
+        lightVerblamp(yellow);  // we cleared the wrong verb_0 and verb_1, but are still in verbinputmode
         break;
     }
     
@@ -189,6 +182,21 @@ void inputVerb()
   else if ((verb_valid == true) && (noun_valid != true)) // we have a valid verb and now lets see what we comes next: Lamptest, Program Input, Verb input?
   {
     lightVerblamp(green);
+    switch(temporaryKey)
+    {
+      case keyClear:
+        verb_0 = -1;
+        verb_1 = -1;
+        noun_0 = -1;
+        noun_1 = -1;
+        printVerb0(verb_0, false);
+        printVerb1(verb_1, false);
+        verb_error = false;
+        verb_valid = false;
+        verb = 0;
+        noun = 0;
+        break;
+    }
   }
   else if ((verb_valid == true) && (noun_valid == true)) // we have a valid verb and a valid noun, but we want to enter a new verb, so the old noun is invalid now
   {
