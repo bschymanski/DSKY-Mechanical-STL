@@ -5,6 +5,7 @@
 #include <neopixel.h>
 #include <nextion.h>
 #include <inputverb.h>
+#include <inputnoun.h>
 
 
 ProgramStruct ProgramTable[] =
@@ -269,6 +270,10 @@ void loop() {
         case modeInputVerb:
           inputVerb();
           break;
+        case modeInputNoun:
+          inputNoun();
+          break;
+
         default:
           break;
       }
@@ -286,6 +291,9 @@ void loop() {
         case modeInputVerb:
           //lightVerblamp(blue);
           //printVerb(verb,false);
+          countregister();
+          break;
+        case modeInputNoun:
           countregister();
           break;
         default:

@@ -38,7 +38,7 @@ void press(int button) { // Our handler
   //Serial.println(button + 1);
   button = button+1;
   current_key = button;
-  setLamp(off, lampPosition);
+  setLamp(white, lampPosition);
   //Serial.print("current_key ");
   //Serial.println(current_key);
   gotInterrupt = true;
@@ -48,7 +48,7 @@ void press(int button) { // Our handler
   //configureCommon();
   if (current_key == 4)
   {
-    
+    resetFunc(); //call reset 
   }
   //detachInterrupt(digitalPinToInterrupt(commonPin));
   switch (button) {

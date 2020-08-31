@@ -82,6 +82,13 @@ void inputVerb()
                 noun_1 = -1;
                 lightVerblamp(green);
                 printVerb(verb,false);
+                switch(temporaryKey)
+                {
+                  case keyNoun:
+                    //setLamp(yellow, lampProgCond);
+                    mode = modeInputNoun;
+                    break;
+                }
                 //setLamp(blue, lampVerb);
             }
             idx++;
