@@ -4,6 +4,7 @@
 volatile extern int current_key;
 volatile extern int current_key_int;
 volatile extern bool gotInterrupt;
+volatile extern bool keypressed;
 extern int old_key;
 
 extern int dregister;

@@ -36,6 +36,7 @@ ProgramStruct ProgramTable[] =
 volatile int current_key = 0;
 volatile int current_key_int = 0;
 volatile bool gotInterrupt = false;
+volatile bool keypressed = false;
 int old_key = 0;
 unsigned long int mainLoopDelay = 0;
 unsigned long int mainLoopISRDelay = 10000;
@@ -250,7 +251,7 @@ void loop() {
     setLamp(off, lampKeyRelease);
     setLamp(off, lampGimbalLock);
     setLamp(off, lampVel);
-    if (current_key != old_key) // a new key has been pressed, save
+    if (keypressed == true) // a new key has been pressed, save
     {
       setLamp(off, lampPosition);
       setLamp(off, lampPosition);
@@ -279,9 +280,10 @@ void loop() {
       }
       // end switch mode()
       old_key = current_key;
+      keypressed = false;
     }
     // end a new key has been pressed, save
-    else if (current_key == old_key)
+    else if (keypressed == false)
     {
       switch (mode)
       {

@@ -42,6 +42,7 @@ void press(int button) { // Our handler
   //Serial.print("current_key ");
   //Serial.println(current_key);
   gotInterrupt = true;
+  keypressed = true;
   setLamp(off, lampPosition);
   //Serial.print("gotInterrupt ");
   //Serial.println(gotInterrupt);
