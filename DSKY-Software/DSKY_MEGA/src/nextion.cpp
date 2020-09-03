@@ -307,6 +307,89 @@ void lightVerblamp(int color)
   
 }
 
+void lightNounlamp(int color)
+{
+  switch (color)
+  {
+    case blue:
+      Serial1.print("nounlight.pco=BLUE");
+      Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+      Serial1.write(0xff);
+      Serial1.write(0xff);
+      break;
+    case green:
+      Serial1.print("nounlight.pco=GREEN");
+      Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+      Serial1.write(0xff);
+      Serial1.write(0xff);
+      break;
+    case yellow:
+      Serial1.print("nounlight.pco=YELLOW");
+      Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+      Serial1.write(0xff);
+      Serial1.write(0xff);
+      break;
+    case red:
+      Serial1.print("nounlight.pco=RED");
+      Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+      Serial1.write(0xff);
+      Serial1.write(0xff);
+      break;
+    case off:
+      Serial1.print("nounlight.pco=BLACK");
+      Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+      Serial1.write(0xff);
+      Serial1.write(0xff);
+      break;
+    default:
+      break;
+  }
+}
+
+
+void printNoun0(int noun_0, bool blink = false)
+{
+  if (noun_0 >= 0)
+  {
+    Serial1.print("N1");
+    Serial1.print(".txt=\"");
+    Serial1.print(noun_0);
+    Serial1.print("\"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+  }
+  else if (noun_0 < 0)
+  {
+    Serial1.print("N1");
+    Serial1.print(".txt=\" \"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+  }
+}
+void printNoun1(int noun_1, bool blink = false)
+{
+  if (noun_1 >= 0)
+  {
+    Serial1.print("N2");
+    Serial1.print(".txt=\"");
+    Serial1.print(noun_1);
+    Serial1.print("\"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+  }
+  else if (noun_1 < 0)
+  {
+    Serial1.print("N2");
+    Serial1.print(".txt=\" \"");
+    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
+    Serial1.write(0xff);
+    Serial1.write(0xff);
+  }
+}
+
 void lightCompActy(int color)
 {
   switch (color)
@@ -445,17 +528,17 @@ void nextion_debug()
     nextion_enter(2);
   }
   
-  Serial2.print("N1.val=");
+  Serial2.print("N2.val=");
   Serial2.print(noun_1);
   nextion_enter(2);
   if (noun_1 >= 0)
   {
-    Serial2.print("N1.pco=BLUE");
+    Serial2.print("N2.pco=BLUE");
     nextion_enter(2);
   }
   else
   {
-    Serial2.print("N1.pco=RED");
+    Serial2.print("N2.pco=RED");
     nextion_enter(2);
   }
 

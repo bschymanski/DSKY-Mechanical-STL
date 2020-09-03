@@ -222,6 +222,7 @@ void setup() {
   printRegister(2, 23111, true, false, false);
   printRegister(3, -222, true, false, false);
   lightVerblamp(green);
+  lightNounlamp(green);
   lightCompActy(off);
   printVerb(verb, false);
   printNoun(noun, false);

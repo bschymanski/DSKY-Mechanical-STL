@@ -3,6 +3,7 @@
 #include <button_read_int.h>
 #include <neopixel.h>
 #include <nextion.h>
+#include <inputnoun.h>
 
 
 void clearVerbfunction()
@@ -87,6 +88,7 @@ void inputVerb()
                   case keyNoun:
                     //setLamp(yellow, lampProgCond);
                     mode = modeInputNoun;
+                    inputNoun();
                     break;
                 }
                 //setLamp(blue, lampVerb);
