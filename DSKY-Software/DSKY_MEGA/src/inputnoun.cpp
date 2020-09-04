@@ -3,6 +3,7 @@
 #include <button_read_int.h>
 #include <neopixel.h>
 #include <nextion.h>
+#include <inputverb.h>
 
 void clearNounfunction()
 {
@@ -26,7 +27,15 @@ void clearNounfunction()
 
 void inputNoun()
 {
-  if ((noun_0 >= 0) && (noun_1 >= 0) && (noun_valid != true) && (noun_error !=true) ) // we might possibly have a valid noun! Lets check it out
+  if ((noun_0 >= 0) && (noun_1 >= 0) && (noun_valid != true) && (noun_error !=true) && (current_key == keyRelease)) // we entered both noun_0 and noun_1, but want to cancel anyway, pressed keyRelease
+  {
+    clearNounfunction();
+    clearVerbfunction();
+    lightNounlamp(green);
+    lightVerblamp(green);
+    mode = modeIdle;
+  }
+  else if ((noun_0 >= 0) && (noun_1 >= 0) && (noun_valid != true) && (noun_error !=true) ) // we might possibly have a valid noun! Lets check it out
   {
     noun_temp = (noun_0*10)+noun_1;
     short idx = 0;
@@ -118,16 +127,32 @@ void inputNoun()
         if (noun_valid == false)
         { // we don't have a valid noun yet, but we have entered a number, lets assess it to the proper place (first or second Digit)
           if (noun_0 < 0)
-          { // First Verb Digit has been entered
+          { // First Noun Digit has been entered
             noun_0 = current_key_int;
             printNoun0(noun_0, false);
           }
           else if ((noun_0 >= 0) && (noun_1 < 0))
-          { // Second verb Digit has been entered
+          { // Second Noun Digit has been entered
             noun_1 = current_key_int;
             printNoun1(noun_1, false);
           }
         }
+        break;
+    }
+  }
+  else if ((noun_valid != true) && (noun_error ==true)) // we do not have a valid noun yet, a wrong noun has been entered
+  {
+    lightNounlamp(red);
+    switch(current_key)
+    {
+      case keyClear:
+        noun_0 = -1;
+        noun_1 = -1;
+        printNoun0(noun_0, false);
+        printNoun1(noun_1, false);
+        setLamp(off, lampOprErr);
+        noun_error = false;
+        lightNounlamp(yellow);  // we cleared the wrong noun_0 and noun_1, but are still in verbinputmode
         break;
     }
   }

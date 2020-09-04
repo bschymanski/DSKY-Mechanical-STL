@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <main.h>
+#include <timer.h>
 #include <button_read_int.h>
 #include <wire.h>
 #include <neopixel.h>
@@ -17,16 +18,16 @@ ProgramStruct ProgramTable[] =
   { verbDisplayDecimal,   nounLatLongAltitude,  action_displayGPS,            programNotUsed                },  /* V16  N43 E  - Action: Display Lattitude / Longitude / Altidue : actionReadGPS() */
   { verbDisplayDecimal,   nounGPSTime,          action_displayGPSTime,        programNotUsed                },  /* V16  N38 E  - Action: Display GPS Time : actionReadGPSTime() */
   { verbDisplayDecimal,   nounIMUgyro,          action_displayIMUGyro,        programNotUsed                },  /* V16  N18 E  - Action: IMUGyro */
-  { verbDisplayDecimal,   nounSelectAudioclip,  action_PlayAudioclip,         programNotUsed                },  /* V16  98E   -  Action: Play Selected AudioClip : actionPlaySelectedAudioclip(int clipnum)*/
-  { verbInputProg,        nounNotUsed,          action_none,                  programDispTimeDate           },  /* V37  20E    - Program: Display Date / Month / Time : progDispTimeDate()*/ 
-  { verbInputProg,        nounNotUsed,          action_none,                  programSetDateMan             },  /* V37  21E*/
-  { verbInputProg,        nounNotUsed,          action_none,                  programSetTimeGPS             },  /* V37  22E*/
-  { verbInputProg,        nounNotUsed,          action_none,                  programSetDateGPS             },  /* V37  23E*/
-  { verbInputProg,        nounNotUsed,          action_none,                  programSetDebugEEPROM         },  /* V37  24E*/
-  { verbInputProg,        nounNotUsed,          action_none,                  programSetColormodeEEPROM     },  /* V37  24E*/
-  { verbInputProg,        nounNotUsed,          action_none,                  programJFKAudio               },  /* V37  62E*/
-  { verbInputProg,        nounNotUsed,          action_none,                  programApollo11Audio          },  /* V37  69E*/
-  { verbInputProg,        nounNotUsed,          action_none,                  programApollo13Audio          },  /* V37  70E*/
+  { verbDisplayDecimal,   nounSelectAudioclip,  action_PlayAudioclip,         programNotUsed                },  /* V16  N98 E   -  Action: Play Selected AudioClip : actionPlaySelectedAudioclip(int clipnum)*/
+  { verbInputProg,        nounClockTime,        action_none,                  programDispTimeDate           },  /* V37E  36 E    - Program: Display Date / Month / Time : progDispTimeDate()*/ 
+  { verbInputProg,        nounNotUsed,          action_none,                  programSetDateMan             },  /* V37E  21E*/
+  { verbInputProg,        nounNotUsed,          action_none,                  programSetTimeGPS             },  /* V37E  22E*/
+  { verbInputProg,        nounNotUsed,          action_none,                  programSetDateGPS             },  /* V37E  23E*/
+  { verbInputProg,        nounNotUsed,          action_none,                  programSetDebugEEPROM         },  /* V37E  24E*/
+  { verbInputProg,        nounNotUsed,          action_none,                  programSetColormodeEEPROM     },  /* V37E  24E*/
+  { verbInputProg,        nounNotUsed,          action_none,                  programJFKAudio               },  /* V37E  62E*/
+  { verbInputProg,        nounNotUsed,          action_none,                  programApollo11Audio          },  /* V37E  69E*/
+  { verbInputProg,        nounNotUsed,          action_none,                  programApollo13Audio          },  /* V37E  70E*/
   { verbInputNumber,      nounClockTime,        action_setTime,               programNotUsed                },  /* V21  36E   - Action: Set Time : actionSetTime() */
   { verbInputNumber,      nounGPSTime,          action_setGPSTime,            programNotUsed                },  /* V21  38E   - Action: Set GPS Time : actionSetGPSTime() */
   { verbInputNumber,      nounSelectAudioclip,  action_SelectAudioclip,       programNotUsed                },  /* V21  98E   - Action: Select AudioClip : aactionSelectAudioclip() actionPlaySelectedAudioclip(int clipnum)*/
@@ -166,6 +167,52 @@ void countregister()  // simple Idlefunction that counts on the registers
 
 #define DEBUG 1
 
+auto timer = timer_create_default();
+
+// 1sec toogle
+bool toggle_timer(void *)
+{
+  if(global_state_1sec==false){
+    global_state_1sec=true;
+    toggle = true;
+  }
+  else
+  {
+    global_state_1sec=false;
+    toggle = false;
+  }
+  return true; // repeat? true
+}
+
+// 500msec toggle
+bool toggle_timer_500(void *)
+{
+  if(global_state_500==false){
+    global_state_500=true;
+    toggle500 = true;
+  }
+  else
+  {
+    global_state_500=false;
+    toggle500 = false;
+  }
+  return true; // repeat? true
+}
+
+bool toggle_timer_250(void *)
+{
+  if(global_state_250==false){
+    global_state_250=true;
+    toggle250 = true;
+  }
+  else if (global_state_250==true)
+  {
+    global_state_250=false;
+    toggle250 = false;
+  }
+  return true; // repeat? true
+}
+
 void setup() {
   configureCommon(); // Setup pins for interrupt
   attachInterrupt(digitalPinToInterrupt(commonPin), pressInterrupt, FALLING);
@@ -227,10 +274,40 @@ void setup() {
   printVerb(verb, false);
   printNoun(noun, false);
   printProg(prog, false);
+
+  timer.every(1000, toggle_timer);
+  timer.every(500, toggle_timer_500);
+  timer.every(250, toggle_timer_250);
 }
 
 void loop() {
   // Empty!
+  timer.tick();
+  if (toggle == true)  // this little Blinking routine is an indication that we are still passing the Main loop and are not stuck somewhere
+  {
+      if ((toggle500 == true) && (toggled500 == false))
+      {
+          lightCompActy(green);
+          toggled500 = true;
+      }
+      else if ((toggle500 == false) && (toggled500 == true))
+      {
+          lightCompActy(off);
+      }
+  }
+  else if (toggle == false)
+  {
+      //setLamp(off, lampClk);
+      if ((toggle500 == true) && (toggled500 == true))
+      {
+          lightCompActy(green);
+          toggled500 = false;
+      }
+      else if ((toggle500 == false) && (toggled500 == false))
+      {
+          lightCompActy(off);
+      }
+  }
   if (gotInterrupt == true)
   {
     //setLamp(green, lampTemp);
@@ -245,13 +322,6 @@ void loop() {
     //mainLoopDelay = millis();
     // End Little Mainloop Delay
 
-    setLamp(off, lampTemp);
-    setLamp(off, lampUplinkActy);
-    setLamp(off, lampNoAtt);
-    setLamp(off, lampSTBY);
-    setLamp(off, lampKeyRelease);
-    setLamp(off, lampGimbalLock);
-    setLamp(off, lampVel);
     if (keypressed == true) // a new key has been pressed, save
     {
       setLamp(off, lampPosition);
@@ -273,9 +343,13 @@ void loop() {
           inputVerb();
           break;
         case modeInputNoun:
+          printVerb(verb, false);
           inputNoun();
           break;
-
+        case modeInputProgram:
+          countregister();
+          printVerb(verb, false);
+          break;
         default:
           break;
       }
@@ -298,6 +372,10 @@ void loop() {
           break;
         case modeInputNoun:
           countregister();
+          break;
+        case modeInputProgram:
+          countregister();
+          printVerb(verb, false);
           break;
         default:
           break;

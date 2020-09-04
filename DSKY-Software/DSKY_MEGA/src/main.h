@@ -183,4 +183,8 @@ extern long loopincrement_r1;
 extern long loopincrement_r2;
 extern long loopincrement_r3;
 
+extern bool toggle_timer(void *);
+extern bool toggle_timer_500(void *);
+extern bool toggle_timer_250(void *);
+
 #endif

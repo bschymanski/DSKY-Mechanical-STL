@@ -189,20 +189,103 @@ void printProg(int prog, bool blink = false)
 
 void printVerb(int verb, bool blink = false)
 {
-  if (verb == verbNone)
+  int one = 0;
+  int ten = 0;
+  if (blinkverb == false)
   {
-    Serial1.print("V1");
-    Serial1.print(".txt=\" \"");
-    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
-    Serial1.write(0xff);
-    Serial1.write(0xff);
-    Serial1.print("V2");
-    Serial1.print(".txt=\" \"");
-    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
-    Serial1.write(0xff);
-    Serial1.write(0xff);
+    if (verb == verbNone)
+    {
+      Serial1.print("V1");
+      Serial1.print(".txt=\" \"");
+      nextion_enter(1);
+      Serial1.print("V2");
+      Serial1.print(".txt=\" \"");
+      nextion_enter(1);
+    }
+    else if ((verb > 0) && (verb < 10))
+    {
+      Serial1.print("V1");
+      Serial1.print(".txt=\"0\"");
+      nextion_enter(1);
+      Serial1.print("V2");
+      Serial1.print(".txt=\"");
+      Serial1.print(verb);
+      Serial1.print("\"");
+      nextion_enter(1);
+    }
+    else if (verb >= 10)
+    {   
+      one = verb % 10;
+      ten = (verb - one) / 10;
+      //SevenSeg.setDigit(0, 0, ten, false);
+      Serial1.print("V1");
+      Serial1.print(".txt=\"");
+      Serial1.print(ten);
+      Serial1.print("\"");
+      nextion_enter(1);
+      //SevenSeg.setDigit(0, 1, one, false);
+      Serial1.print("V2");
+      Serial1.print(".txt=\"");
+      Serial1.print(one);
+      Serial1.print("\"");
+      nextion_enter(1);
+    }
+  }
+  else if (blinkverb == true)
+  {
+    if (toggle500 == true)
+    {
+      Serial1.print("V1");
+      Serial1.print(".txt=\" \"");
+      nextion_enter(1);
+      Serial1.print("V2");
+      Serial1.print(".txt=\" \"");
+      nextion_enter(1);
+    }
+    else if (toggle500 == false)
+    {
+      if (verb == verbNone)
+    {
+      Serial1.print("V1");
+      Serial1.print(".txt=\" \"");
+      nextion_enter(1);
+      Serial1.print("V2");
+      Serial1.print(".txt=\" \"");
+      nextion_enter(1);
+    }
+    else if ((verb > 0) && (verb < 10))
+    {
+      Serial1.print("V1");
+      Serial1.print(".txt=\"0\"");
+      nextion_enter(1);
+      Serial1.print("V2");
+      Serial1.print(".txt=\"");
+      Serial1.print(verb);
+      Serial1.print("\"");
+      nextion_enter(1);
+    }
+    else if (verb >= 10)
+    {   
+      one = verb % 10;
+      ten = (verb - one) / 10;
+      //SevenSeg.setDigit(0, 0, ten, false);
+      Serial1.print("V1");
+      Serial1.print(".txt=\"");
+      Serial1.print(ten);
+      Serial1.print("\"");
+      nextion_enter(1);
+      //SevenSeg.setDigit(0, 1, one, false);
+      Serial1.print("V2");
+      Serial1.print(".txt=\"");
+      Serial1.print(one);
+      Serial1.print("\"");
+      nextion_enter(1);
+    }
+    }
   }
 }
+
+
 void printVerb0(int verb_0, bool blink = false)
 {
   if (verb_0 >= 0)
@@ -211,17 +294,13 @@ void printVerb0(int verb_0, bool blink = false)
     Serial1.print(".txt=\"");
     Serial1.print(verb_0);
     Serial1.print("\"");
-    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
-    Serial1.write(0xff);
-    Serial1.write(0xff);
+    nextion_enter(1);
   }
   else if (verb_0 < 0)
   {
     Serial1.print("V1");
     Serial1.print(".txt=\" \"");
-    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
-    Serial1.write(0xff);
-    Serial1.write(0xff);
+    nextion_enter(1);
   }
 }
 void printVerb1(int verb_1, bool blink = false)
@@ -232,17 +311,13 @@ void printVerb1(int verb_1, bool blink = false)
     Serial1.print(".txt=\"");
     Serial1.print(verb_1);
     Serial1.print("\"");
-    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
-    Serial1.write(0xff);
-    Serial1.write(0xff);
+    nextion_enter(1);
   }
   else if (verb_1 < 0)
   {
     Serial1.print("V2");
     Serial1.print(".txt=\" \"");
-    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
-    Serial1.write(0xff);
-    Serial1.write(0xff);
+    nextion_enter(1);
   }
 }
 
@@ -255,14 +330,10 @@ void printNoun(int noun, bool blink = false)
   {
     Serial1.print("N1");
     Serial1.print(".txt=\" \"");
-    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
-    Serial1.write(0xff);
-    Serial1.write(0xff);
+    nextion_enter(1);
     Serial1.print("N2");
     Serial1.print(".txt=\" \"");
-    Serial1.write(0xff);  //Send this three lines after each command sent to the nextion display.
-    Serial1.write(0xff);
-    Serial1.write(0xff);
+    nextion_enter(1);
   }
 }
 

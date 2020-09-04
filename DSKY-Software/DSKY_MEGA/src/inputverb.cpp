@@ -90,6 +90,11 @@ void inputVerb()
                     mode = modeInputNoun;
                     inputNoun();
                     break;
+                  case keyEnter:
+                    mode = modeInputProgram;
+                    blinkverb = true;
+                    printVerb(verb,false);
+                    break;
                 }
                 //setLamp(blue, lampVerb);
             }
